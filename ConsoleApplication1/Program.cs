@@ -19,9 +19,6 @@ namespace ConsoleApplication1
     {
         private static int money;
 
-        /// <summary>
-        /// This is the starter method for the machine
-        /// </summary>
         public void Start()
         {
             var inventory = new[] { new Soda { Name = "coke", Nr = 5 }, new Soda { Name = "sprite", Nr = 3 }, new Soda { Name = "fanta", Nr = 3 } };
