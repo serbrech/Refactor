@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace ConsoleApplication1
 {
@@ -10,37 +11,37 @@ namespace ConsoleApplication1
     {
         private static void Main(string[] args)
         {
-            SodaMachine sodaMachine = new SodaMachine();
+            SodaMachine sodaMachine = new SodaMachine(Console.In, Console.Out);
             sodaMachine.Start();
         }
     }
 
     public class SodaMachine
     {
+        private TextReader inputReader { get; set; }
+        private TextWriter outputWriter { get; set; }
+
+        public SodaMachine(TextReader input, TextWriter output)
+        {
+            inputReader = input;
+            outputWriter = output;
+        }
+
         private static int money;
 
         public void Start()
         {
             var inventory = new[] { new Soda { Name = "coke", Nr = 5 }, new Soda { Name = "sprite", Nr = 3 }, new Soda { Name = "fanta", Nr = 3 } };
-
-            while (true)
+            var quit = false;
+            while (!quit)
             {
-                Console.WriteLine("\n\nAvailable commands:");
-                Console.WriteLine("insert (money) - Money put into money slot");
-                Console.WriteLine("order (coke, sprite, fanta) - Order from machines buttons");
-                Console.WriteLine("sms order (coke, sprite, fanta) - Order sent by sms");
-                Console.WriteLine("recall - gives money back");
-                Console.WriteLine("-------");
-                Console.WriteLine("Inserted money: " + money);
-                Console.WriteLine("-------\n\n");
-
-                var input = Console.ReadLine();
-
+                DisplayInfoMessage();                
+                var input = GetCommand();
                 if (input.StartsWith("insert"))
                 {
                     //Add to credit
                     money += int.Parse(input.Split(' ')[1]);
-                    Console.WriteLine("Adding " + int.Parse(input.Split(' ')[1]) + " to credit");
+                    outputWriter.WriteLine("Adding " + int.Parse(input.Split(' ')[1]) + " to credit");
                 }
                 if (input.StartsWith("order"))
                 {
@@ -53,19 +54,19 @@ namespace ConsoleApplication1
                             var coke = inventory[0];
                             if (coke.Name == csoda && money > 19 && coke.Nr > 0)
                             {
-                                Console.WriteLine("Giving coke out");
+                                outputWriter.WriteLine("Giving coke out");
                                 money -= 20;
-                                Console.WriteLine("Giving " + money + " out in change");
+                                outputWriter.WriteLine("Giving " + money + " out in change");
                                 money = 0;
                                 coke.Nr--;
                             }
                             else if (coke.Name == csoda && coke.Nr == 0)
                             {
-                                Console.WriteLine("No coke left");
+                                outputWriter.WriteLine("No coke left");
                             }
                             else if (coke.Name == csoda)
                             {
-                                Console.WriteLine("Need " + (20 - money) + " more");
+                                outputWriter.WriteLine("Need " + (20 - money) + " more");
                             }
 
                             break;
@@ -73,19 +74,19 @@ namespace ConsoleApplication1
                             var fanta = inventory[2];
                             if (fanta.Name == csoda && money > 14 && fanta.Nr >= 0)
                             {
-                                Console.WriteLine("Giving fanta out");
+                                outputWriter.WriteLine("Giving fanta out");
                                 money -= 15;
-                                Console.WriteLine("Giving " + money + " out in change");
+                                outputWriter.WriteLine("Giving " + money + " out in change");
                                 money = 0;
                                 fanta.Nr--;
                             }
                             else if (fanta.Name == csoda && fanta.Nr == 0)
                             {
-                                Console.WriteLine("No fanta left");
+                                outputWriter.WriteLine("No fanta left");
                             }
                             else if (fanta.Name == csoda)
                             {
-                                Console.WriteLine("Need " + (15 - money) + " more");
+                                outputWriter.WriteLine("Need " + (15 - money) + " more");
                             }
 
                             break;
@@ -93,23 +94,23 @@ namespace ConsoleApplication1
                             var sprite = inventory[1];
                             if (sprite.Name == csoda && money > 14 && sprite.Nr > 0)
                             {
-                                Console.WriteLine("Giving sprite out");
+                                outputWriter.WriteLine("Giving sprite out");
                                 money -= 15;
-                                Console.WriteLine("Giving " + money + " out in change");
+                                outputWriter.WriteLine("Giving " + money + " out in change");
                                 money = 0;
                                 sprite.Nr--;
                             }
                             else if (sprite.Name == csoda && sprite.Nr == 0)
                             {
-                                Console.WriteLine("No sprite left");
+                                outputWriter.WriteLine("No sprite left");
                             }
                             else if (sprite.Name == csoda)
                             {
-                                Console.WriteLine("Need " + (15 - money) + " more");
+                                outputWriter.WriteLine("Need " + (15 - money) + " more");
                             }
                             break;
                         default:
-                            Console.WriteLine("No such soda");
+                            outputWriter.WriteLine("No such soda");
                             break;
                     }
                 }
@@ -122,38 +123,59 @@ namespace ConsoleApplication1
                         case "coke":
                             if (inventory[0].Nr > 0)
                             {
-                                Console.WriteLine("Giving coke out");
+                                outputWriter.WriteLine("Giving coke out");
                                 inventory[0].Nr--;
                             }
                             break;
                         case "sprite":
                             if (inventory[1].Nr > 0)
                             {
-                                Console.WriteLine("Giving sprite out");
+                                outputWriter.WriteLine("Giving sprite out");
                                 inventory[1].Nr--;
                             }
                             break;
                         case "fanta":
                             if (inventory[2].Nr > 0)
                             {
-                                Console.WriteLine("Giving fanta out");
+                                outputWriter.WriteLine("Giving fanta out");
                                 inventory[2].Nr--;
                             }
                             break;
                     }
-
                 }
-
                 if (input.Equals("recall"))
                 {
                     //Give money back
-                    Console.WriteLine("Returning " + money + " to customer");
+                    outputWriter.WriteLine("Returning " + money + " to customer");
                     money = 0;
+                }
+                if(input.Equals("q"))
+                {
+                    quit = true;
+                    outputWriter.WriteLine("quitting");
                 }
 
             }
         }
+
+        private string GetCommand()
+        {
+            return inputReader.ReadLine();
+        }
+
+        private void DisplayInfoMessage()
+        {
+            outputWriter.WriteLine("\n\nAvailable commands:");
+            outputWriter.WriteLine("insert (money) - Money put into money slot");
+            outputWriter.WriteLine("order (coke, sprite, fanta) - Order from machines buttons");
+            outputWriter.WriteLine("sms order (coke, sprite, fanta) - Order sent by sms");
+            outputWriter.WriteLine("recall - gives money back");
+            outputWriter.WriteLine("-------");
+            outputWriter.WriteLine("Inserted money: " + money);
+            outputWriter.WriteLine("-------\n\n");
+        }
     }
+
     public class Soda
     {
         public string Name { get; set; }
