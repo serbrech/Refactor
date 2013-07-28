@@ -23,6 +23,8 @@ namespace ConsoleApplication1
         private TextWriter outputWriter;
         private Soda[] inventory;
         CommandFactory commandFactory;
+        private static int money;
+        private bool quit = false;
 
         public SodaMachine(TextReader input, TextWriter output)
         {
@@ -32,60 +34,65 @@ namespace ConsoleApplication1
             inventory = new[] { new Soda { Name = "coke", Nr = 5, Price = 20 }, new Soda { Name = "sprite", Nr = 3, Price = 15 }, new Soda { Name = "fanta", Nr = 3, Price = 15 } };
         }
 
-        private static int money;
+        public void Start()
+        {
+            while (!quit)
+            {
+                DisplayInfoMessage();
+                dynamic command = GetCommand();
+                Apply(command);
+            }
+        }
+
+        private void Apply(QuitCommand command)
+        {
+            quit = true;
+            outputWriter.WriteLine("quitting");
+        }
+
+        private void Apply(RecallCommand command)
+        {
+            outputWriter.WriteLine("Returning " + money + " to customer");
+            money = 0;
+        }
+
+        private void Apply(SmsOrderCommand command) 
+        {
+            var csoda = command.SodaName;
+            Soda soda = GetSodaByName(csoda);
+            outputWriter.WriteLine("Giving " + soda.Name + " out");
+            soda.Nr--;
+        }
+
+        private void Apply(InsertCommand command)
+        {
+            AddToCredit(command.Amount);
+        }
+
+        private void Apply(UnknownCommand command)
+        {
+            outputWriter.WriteLine("Unknown command");
+        }
+
+        private void Apply(OrderCommand command)
+        {
+            Soda soda = GetSodaByName(command.SodaName);
+            if (soda != null)
+                OrderSoda(soda);
+            else
+                outputWriter.WriteLine("No such soda");
+        }
+
+        private dynamic GetCommand()
+        {
+            return commandFactory.BuildCommand(inputReader.ReadLine());
+        }
 
         private void AddToCredit(int moneyIn)
         {
             money += moneyIn;
             outputWriter.WriteLine("Adding " + moneyIn + " to credit");
         }
-
-        public void Start()
-        {
-            var quit = false;
-            while (!quit)
-            {
-                DisplayInfoMessage();
-                Command command = GetCommand();
-                if (command.Input.StartsWith("insert"))
-                {
-                    AddToCredit(int.Parse(command.Input.Split(' ')[1]));
-                }
-                if (command.Input.StartsWith("order"))
-                {
-                    Soda soda = GetSodaByName(command.Input.Split(' ')[1]);
-                    if (soda != null)
-                        OrderSoda(soda);
-                    else
-                        outputWriter.WriteLine("No such soda");
-                }
-                if (command.Input.StartsWith("sms order"))
-                {
-                    var csoda = command.Input.Split(' ')[2];
-                    Soda soda = GetSodaByName(csoda);
-                    outputWriter.WriteLine("Giving " + soda.Name + " out");
-                    soda.Nr--;
-                }
-                if (command.Input.Equals("recall"))
-                {
-                    //Give money back
-                    outputWriter.WriteLine("Returning " + money + " to customer");
-                    money = 0;
-                }
-                if (command.Input.Equals("q"))
-                {
-                    quit = true;
-                    outputWriter.WriteLine("quitting");
-                }
-
-            }
-        }
-
-        private Command GetCommand()
-        {
-            return commandFactory.BuildCommand(inputReader.ReadLine());
-        }
-        
 
         private Soda GetSodaByName(string csoda)
         {
@@ -112,9 +119,6 @@ namespace ConsoleApplication1
             }
         }
 
-        
-        
-
         private void DisplayInfoMessage()
         {
             outputWriter.WriteLine("\n\nAvailable commands:");
@@ -132,8 +136,6 @@ namespace ConsoleApplication1
     {
         public string Name { get; set; }
         public int Nr { get; set; }
-
-
         public int Price { get; set; }
     }
 }

@@ -7,11 +7,11 @@ namespace ConsoleApplication1.Commands
 {
     public class SmsOrderCommand : Command
     {
-       
+        public string SodaName { get; set; }
         public SmsOrderCommand(string input)
             : base(input)
         {
-           
+            SodaName = input.Split(' ')[2];
         }
     }
 }
