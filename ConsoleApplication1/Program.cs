@@ -18,13 +18,15 @@ namespace ConsoleApplication1
 
     public class SodaMachine
     {
-        private TextReader inputReader { get; set; }
-        private TextWriter outputWriter { get; set; }
+        private TextReader inputReader;
+        private TextWriter outputWriter;
+        private Soda[] inventory;
 
         public SodaMachine(TextReader input, TextWriter output)
         {
             inputReader = input;
             outputWriter = output;
+            inventory = new[] { new Soda { Name = "coke", Nr = 5, Price = 20 }, new Soda { Name = "sprite", Nr = 3, Price = 15 }, new Soda { Name = "fanta", Nr = 3, Price = 15 } };
         }
 
         private static int money;
@@ -37,7 +39,6 @@ namespace ConsoleApplication1
 
         public void Start()
         {
-            var inventory = new[] { new Soda { Name = "coke", Nr = 5, Price = 20 }, new Soda { Name = "sprite", Nr = 3, Price = 15 }, new Soda { Name = "fanta", Nr = 3, Price = 15 } };
             var quit = false;
             while (!quit)
             {
@@ -49,28 +50,11 @@ namespace ConsoleApplication1
                 }
                 if (input.StartsWith("order"))
                 {
-                    // split string on space
-                    var csoda = input.Split(' ')[1];
-                    Soda soda;
-                    //Find out witch kind
-                    switch (csoda)
-                    {
-                        case "coke":
-                            soda = inventory[0];
-                            OrderSoda(soda);
-                            break;
-                        case "fanta":
-                            soda = inventory[2];
-                            OrderSoda(soda);
-                            break;
-                        case "sprite":
-                            soda = inventory[1];
-                            OrderSoda(soda);
-                            break;
-                        default:
-                            outputWriter.WriteLine("No such soda");
-                            break;
-                    }
+                    Soda soda = GetSodaByName(input.Split(' ')[1]);
+                    if (soda != null) 
+                        OrderSoda(soda);
+                    else 
+                        outputWriter.WriteLine("No such soda");
                 }
                 if (input.StartsWith("sms order"))
                 {
@@ -114,6 +98,11 @@ namespace ConsoleApplication1
                 }
 
             }
+        }
+
+        private Soda GetSodaByName(string csoda)
+        {
+            return inventory.FirstOrDefault(s => s.Name == csoda);
         }
 
         private void OrderSoda(Soda soda)

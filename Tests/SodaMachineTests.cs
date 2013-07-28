@@ -94,6 +94,18 @@ namespace Tests
         }
 
         [Fact]
+        public void order_non_existing_soda_should_warn()
+        {
+            var input = GetCommandReader("order solo", "q");
+            var output = new System.IO.StringWriter();
+
+            var sodamachine = new SodaMachine(input, output);
+            sodamachine.Start();
+
+            output.ToString().Should().Contain("No such soda");
+        }
+
+        [Fact]
         public void Command_insert_inserts_credit()
         {
             var input = GetCommandReader("insert 100", "q");
