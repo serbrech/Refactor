@@ -94,7 +94,7 @@ namespace Tests
         }
 
         [Fact]
-        public void Command_insert_insert_credit()
+        public void Command_insert_inserts_credit()
         {
             var input = GetCommandReader("insert 100", "q");
             var output = new System.IO.StringWriter();

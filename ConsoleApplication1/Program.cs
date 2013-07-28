@@ -37,7 +37,7 @@ namespace ConsoleApplication1
 
         public void Start()
         {
-            var inventory = new[] { new Soda { Name = "coke", Nr = 5 }, new Soda { Name = "sprite", Nr = 3 }, new Soda { Name = "fanta", Nr = 3 } };
+            var inventory = new[] { new Soda { Name = "coke", Nr = 5, Price = 20 }, new Soda { Name = "sprite", Nr = 3, Price = 15 }, new Soda { Name = "fanta", Nr = 3, Price = 15 } };
             var quit = false;
             while (!quit)
             {
@@ -51,66 +51,68 @@ namespace ConsoleApplication1
                 {
                     // split string on space
                     var csoda = input.Split(' ')[1];
+                    Soda soda;
                     //Find out witch kind
                     switch (csoda)
                     {
                         case "coke":
-                            var coke = inventory[0];
-                            if (coke.Name == csoda && money > 19 && coke.Nr > 0)
+                            soda = inventory[0];
+                            if (soda.Name == csoda && money >= soda.Price && soda.Nr > 0)
                             {
-                                outputWriter.WriteLine("Giving coke out");
-                                money -= 20;
+                                outputWriter.WriteLine("Giving {0} out", soda.Name);
+                                money -= soda.Price;
                                 outputWriter.WriteLine("Giving " + money + " out in change");
                                 money = 0;
-                                coke.Nr--;
+                                soda.Nr--;
                             }
-                            else if (coke.Name == csoda && coke.Nr == 0)
+                            else if (soda.Name == csoda && soda.Nr == 0)
                             {
-                                outputWriter.WriteLine("No coke left");
+                                outputWriter.WriteLine("No {0} left", soda.Name);
                             }
-                            else if (coke.Name == csoda)
+                            else if (soda.Name == csoda)
                             {
-                                outputWriter.WriteLine("Need " + (20 - money) + " more");
+                                outputWriter.WriteLine("Need " + (soda.Price - money) + " more");
                             }
 
                             break;
                         case "fanta":
-                            var fanta = inventory[2];
-                            if (fanta.Name == csoda && money > 14 && fanta.Nr > 0)
+                            soda = inventory[2];
+                            if (soda.Name == csoda && money >= soda.Price && soda.Nr > 0)
                             {
-                                outputWriter.WriteLine("Giving fanta out");
-                                money -= 15;
+                                outputWriter.WriteLine("Giving {0} out", soda.Name);
+                                money -= soda.Price;
                                 outputWriter.WriteLine("Giving " + money + " out in change");
                                 money = 0;
-                                fanta.Nr--;
+                                soda.Nr--;
                             }
-                            else if (fanta.Name == csoda && fanta.Nr == 0)
+                            else if (soda.Name == csoda && soda.Nr == 0)
                             {
-                                outputWriter.WriteLine("No fanta left");
+                                outputWriter.WriteLine("No {0} left", soda.Name);
+
                             }
-                            else if (fanta.Name == csoda)
+                            else if (soda.Name == csoda)
                             {
-                                outputWriter.WriteLine("Need " + (15 - money) + " more");
+                                outputWriter.WriteLine("Need " + (soda.Price - money) + " more");
                             }
 
                             break;
                         case "sprite":
-                            var sprite = inventory[1];
-                            if (sprite.Name == csoda && money > 14 && sprite.Nr > 0)
+                            soda = inventory[1];
+                            if (soda.Name == csoda && money >= soda.Price && soda.Nr > 0)
                             {
-                                outputWriter.WriteLine("Giving sprite out");
-                                money -= 15;
+                                outputWriter.WriteLine("Giving {0} out", soda.Name);
+                                money -= soda.Price;
                                 outputWriter.WriteLine("Giving " + money + " out in change");
                                 money = 0;
-                                sprite.Nr--;
+                                soda.Nr--;
                             }
-                            else if (sprite.Name == csoda && sprite.Nr == 0)
+                            else if (soda.Name == csoda && soda.Nr == 0)
                             {
-                                outputWriter.WriteLine("No sprite left");
+                                outputWriter.WriteLine("No {0} left", soda.Name);
                             }
-                            else if (sprite.Name == csoda)
+                            else if (soda.Name == csoda)
                             {
-                                outputWriter.WriteLine("Need " + (15 - money) + " more");
+                                outputWriter.WriteLine("Need " + (soda.Price - money) + " more");
                             }
                             break;
                         default:
@@ -185,5 +187,7 @@ namespace ConsoleApplication1
         public string Name { get; set; }
         public int Nr { get; set; }
 
+
+        public int Price { get; set; }
     }
 }
