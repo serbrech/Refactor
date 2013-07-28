@@ -57,63 +57,15 @@ namespace ConsoleApplication1
                     {
                         case "coke":
                             soda = inventory[0];
-                            if (soda.Name == csoda && money >= soda.Price && soda.Nr > 0)
-                            {
-                                outputWriter.WriteLine("Giving {0} out", soda.Name);
-                                money -= soda.Price;
-                                outputWriter.WriteLine("Giving " + money + " out in change");
-                                money = 0;
-                                soda.Nr--;
-                            }
-                            else if (soda.Name == csoda && soda.Nr == 0)
-                            {
-                                outputWriter.WriteLine("No {0} left", soda.Name);
-                            }
-                            else if (soda.Name == csoda)
-                            {
-                                outputWriter.WriteLine("Need " + (soda.Price - money) + " more");
-                            }
-
+                            OrderSoda(soda);
                             break;
                         case "fanta":
                             soda = inventory[2];
-                            if (soda.Name == csoda && money >= soda.Price && soda.Nr > 0)
-                            {
-                                outputWriter.WriteLine("Giving {0} out", soda.Name);
-                                money -= soda.Price;
-                                outputWriter.WriteLine("Giving " + money + " out in change");
-                                money = 0;
-                                soda.Nr--;
-                            }
-                            else if (soda.Name == csoda && soda.Nr == 0)
-                            {
-                                outputWriter.WriteLine("No {0} left", soda.Name);
-
-                            }
-                            else if (soda.Name == csoda)
-                            {
-                                outputWriter.WriteLine("Need " + (soda.Price - money) + " more");
-                            }
-
+                            OrderSoda(soda);
                             break;
                         case "sprite":
                             soda = inventory[1];
-                            if (soda.Name == csoda && money >= soda.Price && soda.Nr > 0)
-                            {
-                                outputWriter.WriteLine("Giving {0} out", soda.Name);
-                                money -= soda.Price;
-                                outputWriter.WriteLine("Giving " + money + " out in change");
-                                money = 0;
-                                soda.Nr--;
-                            }
-                            else if (soda.Name == csoda && soda.Nr == 0)
-                            {
-                                outputWriter.WriteLine("No {0} left", soda.Name);
-                            }
-                            else if (soda.Name == csoda)
-                            {
-                                outputWriter.WriteLine("Need " + (soda.Price - money) + " more");
-                            }
+                            OrderSoda(soda);
                             break;
                         default:
                             outputWriter.WriteLine("No such soda");
@@ -161,6 +113,26 @@ namespace ConsoleApplication1
                     outputWriter.WriteLine("quitting");
                 }
 
+            }
+        }
+
+        private void OrderSoda(Soda soda)
+        {
+            if (money >= soda.Price && soda.Nr > 0)
+            {
+                outputWriter.WriteLine("Giving {0} out", soda.Name);
+                money -= soda.Price;
+                outputWriter.WriteLine("Giving " + money + " out in change");
+                money = 0;
+                soda.Nr--;
+            }
+            else if (soda.Nr == 0)
+            {
+                outputWriter.WriteLine("No {0} left", soda.Name);
+            }
+            else
+            {
+                outputWriter.WriteLine("Need " + (soda.Price - money) + " more");
             }
         }
 
