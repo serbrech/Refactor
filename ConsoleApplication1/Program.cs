@@ -58,8 +58,7 @@ namespace ConsoleApplication1
 
         private void Apply(SmsOrderCommand command) 
         {
-            var csoda = command.SodaName;
-            Soda soda = GetSodaByName(csoda);
+            Soda soda = GetSodaByName(command.SodaName);
             outputWriter.WriteLine("Giving " + soda.Name + " out");
             soda.Nr--;
         }
