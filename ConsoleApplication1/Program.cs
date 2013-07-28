@@ -21,17 +21,15 @@ namespace ConsoleApplication1
     {
         private TextReader inputReader;
         private TextWriter outputWriter;
-        private Soda[] inventory;
-        CommandFactory commandFactory;
-        private static int money;
+        private Soda[] inventory = new[] { new Soda { Name = "coke", Nr = 5, Price = 20 }, new Soda { Name = "sprite", Nr = 3, Price = 15 }, new Soda { Name = "fanta", Nr = 3, Price = 15 } };
+        CommandFactory commandFactory = new CommandFactory();
+        private static int money = 0;
         private bool quit = false;
 
         public SodaMachine(TextReader input, TextWriter output)
         {
             inputReader = input;
             outputWriter = output;
-            commandFactory = new CommandFactory();
-            inventory = new[] { new Soda { Name = "coke", Nr = 5, Price = 20 }, new Soda { Name = "sprite", Nr = 3, Price = 15 }, new Soda { Name = "fanta", Nr = 3, Price = 15 } };
         }
 
         public void Start()
