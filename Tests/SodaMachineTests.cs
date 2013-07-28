@@ -77,6 +77,23 @@ namespace Tests
         }
 
         [Fact]
+        //Haha found you!
+        public void Warn_when_no_more_soda()
+        {
+            var input = GetCommandReader(
+                "insert 15", "order fanta", 
+                "insert 15", "order fanta", 
+                "insert 15", "order fanta",
+                "insert 15", "order fanta",
+                "q");
+            var output = new System.IO.StringWriter();
+
+            var sodamachine = new SodaMachine(input, output);
+            sodamachine.Start();
+            output.ToString().Should().Contain("No fanta left");
+        }
+
+        [Fact]
         public void Command_insert_insert_credit()
         {
             var input = GetCommandReader("insert 100", "q");

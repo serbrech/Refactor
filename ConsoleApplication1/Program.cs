@@ -72,7 +72,7 @@ namespace ConsoleApplication1
                             break;
                         case "fanta":
                             var fanta = inventory[2];
-                            if (fanta.Name == csoda && money > 14 && fanta.Nr >= 0)
+                            if (fanta.Name == csoda && money > 14 && fanta.Nr > 0)
                             {
                                 outputWriter.WriteLine("Giving fanta out");
                                 money -= 15;
