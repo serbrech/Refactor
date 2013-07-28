@@ -29,6 +29,12 @@ namespace ConsoleApplication1
 
         private static int money;
 
+        private void AddToCredit(int moneyIn)
+        {
+            money += moneyIn;
+            outputWriter.WriteLine("Adding " + moneyIn + " to credit");
+        }
+
         public void Start()
         {
             var inventory = new[] { new Soda { Name = "coke", Nr = 5 }, new Soda { Name = "sprite", Nr = 3 }, new Soda { Name = "fanta", Nr = 3 } };
@@ -39,9 +45,7 @@ namespace ConsoleApplication1
                 var input = GetCommand();
                 if (input.StartsWith("insert"))
                 {
-                    //Add to credit
-                    money += int.Parse(input.Split(' ')[1]);
-                    outputWriter.WriteLine("Adding " + int.Parse(input.Split(' ')[1]) + " to credit");
+                    AddToCredit(int.Parse(input.Split(' ')[1]));
                 }
                 if (input.StartsWith("order"))
                 {
