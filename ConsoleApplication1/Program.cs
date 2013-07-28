@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using ConsoleApplication1.Commands;
 
 namespace ConsoleApplication1
 {
@@ -21,11 +22,13 @@ namespace ConsoleApplication1
         private TextReader inputReader;
         private TextWriter outputWriter;
         private Soda[] inventory;
+        CommandFactory commandFactory;
 
         public SodaMachine(TextReader input, TextWriter output)
         {
             inputReader = input;
             outputWriter = output;
+            commandFactory = new CommandFactory();
             inventory = new[] { new Soda { Name = "coke", Nr = 5, Price = 20 }, new Soda { Name = "sprite", Nr = 3, Price = 15 }, new Soda { Name = "fanta", Nr = 3, Price = 15 } };
         }
 
@@ -43,33 +46,33 @@ namespace ConsoleApplication1
             while (!quit)
             {
                 DisplayInfoMessage();
-                var input = GetCommand();
-                if (input.StartsWith("insert"))
+                Command command = GetCommand();
+                if (command.Input.StartsWith("insert"))
                 {
-                    AddToCredit(int.Parse(input.Split(' ')[1]));
+                    AddToCredit(int.Parse(command.Input.Split(' ')[1]));
                 }
-                if (input.StartsWith("order"))
+                if (command.Input.StartsWith("order"))
                 {
-                    Soda soda = GetSodaByName(input.Split(' ')[1]);
+                    Soda soda = GetSodaByName(command.Input.Split(' ')[1]);
                     if (soda != null)
                         OrderSoda(soda);
                     else
                         outputWriter.WriteLine("No such soda");
                 }
-                if (input.StartsWith("sms order"))
+                if (command.Input.StartsWith("sms order"))
                 {
-                    var csoda = input.Split(' ')[2];
+                    var csoda = command.Input.Split(' ')[2];
                     Soda soda = GetSodaByName(csoda);
                     outputWriter.WriteLine("Giving " + soda.Name + " out");
                     soda.Nr--;
                 }
-                if (input.Equals("recall"))
+                if (command.Input.Equals("recall"))
                 {
                     //Give money back
                     outputWriter.WriteLine("Returning " + money + " to customer");
                     money = 0;
                 }
-                if (input.Equals("q"))
+                if (command.Input.Equals("q"))
                 {
                     quit = true;
                     outputWriter.WriteLine("quitting");
@@ -77,6 +80,12 @@ namespace ConsoleApplication1
 
             }
         }
+
+        private Command GetCommand()
+        {
+            return commandFactory.BuildCommand(inputReader.ReadLine());
+        }
+        
 
         private Soda GetSodaByName(string csoda)
         {
@@ -103,10 +112,8 @@ namespace ConsoleApplication1
             }
         }
 
-        private string GetCommand()
-        {
-            return inputReader.ReadLine();
-        }
+        
+        
 
         private void DisplayInfoMessage()
         {
