@@ -117,6 +117,26 @@ namespace Tests
             output.ToString().Should().Contain("Inserted money: 100");
         }
 
+        [Fact]
+        public void sms_order_returns_soda()
+        {
+            SmsOrder("sprite");
+            SmsOrder("coke");
+            SmsOrder("fanta");
+        }
+
+        private void SmsOrder(string soda)
+        {
+            var input = GetCommandReader("sms order " + soda, "q");
+            var output = new System.IO.StringWriter();
+
+            var sodamachine = new SodaMachine(input, output);
+            sodamachine.Start();
+
+            output.ToString().Should().Contain("Giving " + soda + " out");
+        }
+
+
         private static System.IO.StringReader GetCommandReader(params string[] commands)
         {
             return new System.IO.StringReader(string.Join("\r\n",commands));

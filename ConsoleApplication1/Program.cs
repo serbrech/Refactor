@@ -42,7 +42,7 @@ namespace ConsoleApplication1
             var quit = false;
             while (!quit)
             {
-                DisplayInfoMessage();                
+                DisplayInfoMessage();
                 var input = GetCommand();
                 if (input.StartsWith("insert"))
                 {
@@ -51,39 +51,17 @@ namespace ConsoleApplication1
                 if (input.StartsWith("order"))
                 {
                     Soda soda = GetSodaByName(input.Split(' ')[1]);
-                    if (soda != null) 
+                    if (soda != null)
                         OrderSoda(soda);
-                    else 
+                    else
                         outputWriter.WriteLine("No such soda");
                 }
                 if (input.StartsWith("sms order"))
                 {
                     var csoda = input.Split(' ')[2];
-                    //Find out witch kind
-                    switch (csoda)
-                    {
-                        case "coke":
-                            if (inventory[0].Nr > 0)
-                            {
-                                outputWriter.WriteLine("Giving coke out");
-                                inventory[0].Nr--;
-                            }
-                            break;
-                        case "sprite":
-                            if (inventory[1].Nr > 0)
-                            {
-                                outputWriter.WriteLine("Giving sprite out");
-                                inventory[1].Nr--;
-                            }
-                            break;
-                        case "fanta":
-                            if (inventory[2].Nr > 0)
-                            {
-                                outputWriter.WriteLine("Giving fanta out");
-                                inventory[2].Nr--;
-                            }
-                            break;
-                    }
+                    Soda soda = GetSodaByName(csoda);
+                    outputWriter.WriteLine("Giving " + soda.Name + " out");
+                    soda.Nr--;
                 }
                 if (input.Equals("recall"))
                 {
@@ -91,7 +69,7 @@ namespace ConsoleApplication1
                     outputWriter.WriteLine("Returning " + money + " to customer");
                     money = 0;
                 }
-                if(input.Equals("q"))
+                if (input.Equals("q"))
                 {
                     quit = true;
                     outputWriter.WriteLine("quitting");
