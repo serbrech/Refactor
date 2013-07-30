@@ -55,10 +55,18 @@ namespace ConsoleApplication1
         }
 
         private void Apply(SmsOrderCommand command) 
-        {
+        { 
             Soda soda = GetSodaByName(command.SodaName);
-            outputWriter.WriteLine("Giving " + soda.Name + " out");
-            soda.Nr--;
+            if (soda.Nr > 0)
+            {
+                outputWriter.WriteLine("Giving " + soda.Name + " out");
+                soda.Nr--;
+            }
+            else
+            {
+                outputWriter.WriteLine("No {0} left", soda.Name);
+            }
+            
         }
 
         private void Apply(InsertCommand command)

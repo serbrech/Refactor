@@ -118,6 +118,23 @@ namespace Tests
         }
 
         [Fact]
+        public void sms_order_checks_for_soda_count()
+        {
+            var input = GetCommandReader(
+                "sms order fanta",
+                "sms order fanta",
+                "sms order fanta",
+                "sms order fanta",
+                "q");
+            var output = new System.IO.StringWriter();
+
+            var sodamachine = new SodaMachine(input, output);
+            sodamachine.Start();
+
+            output.ToString().Should().Contain("No fanta left");
+        }
+
+        [Fact]
         public void sms_order_returns_soda()
         {
             SmsOrder("sprite");
